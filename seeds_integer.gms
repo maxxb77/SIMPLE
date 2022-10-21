@@ -241,12 +241,15 @@ equation eq_cap_init(i,v,r,t)      "-- MW -- existing capacity cannot excced exo
 ;
 
 equation
-eq_min_up_time(i,v,r,h,d,t), 
+*eq_min_up_time(i,v,r,h,d,t), 
 eq_start_calc(i,v,r,h,d,t) ;
 
-eq_min_up_time(i,v,r,h,d,t)$[val(i,v,r,t)$min_up_time(i)$hdmod(h,d)]..
-    sum(hh$[hdmod(hh,d)$(h.val-hh.val<=min_up_time(i))],start(i,v,r,hh,t)) =e= on(i,v,r,h,t);
-;
+*eq_min_up_time(i,v,r,h,d,t)$[val(i,v,r,t)$min_up_time(i)$hdmod(h,d)]..
+*    sum(hh$[hdmod(hh,d)$(h.val-hh.val<=min_up_time(i))],
+*        start(i,v,r,hh,t)) 
+*    =e= 
+*    on(i,v,r,h,t);
+*;
 
 eq_start_calc(i,v,r,h,d,t)$[val(i,v,r,t)$min_up_time(i)$hdmod(h,d)]..
     start(i,v,r,h,t) =e= on(i,v,r,h,t) - on(i,v,r,h-1,t) ;

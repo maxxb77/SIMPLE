@@ -40,7 +40,7 @@ $if not set Sw_Tran $SetGlobal Sw_Tran 1
 scalar Sw_Tran "switch to enable or disable transmission" /%Sw_Tran%/ ;
 
 
-set i "technology" /coal, gas-cc, wind/, 
+set i "technology" /coal, gas-cc, wind,willyum/, 
     r "region"     /p1, p2/,
     h "timeslice"  /h1*h8760/,
     d "days"       /1*365/,
