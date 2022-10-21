@@ -1,0 +1,4 @@
+i,cf_tech,commit,cost_cap,cost_vom,cost_fom,heat_rate,cost_cap_decline,vom_decline,fom_decline,heat_rate_decline
+gas-cc,,1,100,5,12,12.5,0.2,0.2,0.2,0.2
+coal,,1,90,7,15,11.8,0.1,0.1,0.1,0.1
+wind,1,,120,,8,,0.25,0.25,0.25,0.25 

@@ -1,0 +1,7 @@
+i,v,r,t,cf_tech,commit,capacity,avail,cost_vom,cost_fom,heat_rate
+gas-cc,init-1,p1,2020,,1,10,0.95,7,10,13.5
+coal,init-1,p1,2020,,1,12,0.95,8,11,12.7
+gas-cc,init-1,p2,2020,,1,9,0.85,4,12,11.8
+gas-cc,init-2,p2,2022,,1,8,0.95,6,10,9.6
+coal,init-1,p2,2020,,1,9,0.95,5,5,10.5
+wind,init-1,p1,2020,1,,10,1,,,
