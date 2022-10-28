@@ -10,7 +10,9 @@ $title "Small Energy Deployment System (SeEDS)"
 *               4. fuel and resource supply curves
 *               5. real data
 *               6. transmission expansion
-*             
+* I would recommend keeping the modeling framework as simple as possible, and
+* allowing users to make it as complex as needed for their use-case via their
+* inputs.
 
 
 * Three globals available:
@@ -38,7 +40,13 @@ $endif.unix
 $if not set Sw_Tran $SetGlobal Sw_Tran 1
 
 scalar Sw_Tran "switch to enable or disable transmission" /%Sw_Tran%/ ;
-
+* This switch, for example, is something I would handle during the data input
+* processing step. If a user only defines one region, transmission is disabled.
+* One less thing to handle inside the optimization. That is, unless this would
+* break the transmission equations. Still, this could be avoided by creating a
+* dummy node and a line with 0 capacity.
+* I think switches are a slippery slope towards inflexibility and should be
+* kept to a minimum.
 
 set i "technology" /coal, gas-cc, wind/, 
     r "region"     /p1, p2/,
@@ -84,6 +92,7 @@ tpast(t,tt)$[tt.val <= t.val] = yes ;
 
 * few different types of input options but mainly we use
 * scalars, tables, and parameter throughout ReEDS
+* ReEDS or SeEDS?
 
 scalar pvf_inv  "present value of investment" /1/, 
        pvf_onm  "20-year inverse capital recovery factor"
@@ -101,6 +110,8 @@ $offdelim
 hmod(h)$sum{(r,d),hour_char(h,r,d,"load")} = yes ;
 dmod(d)$sum{(r,h),hour_char(h,r,d,"load")} = yes ;
 hdmod(h,d)$sum{(r),hour_char(h,r,d,"load")} = yes ;
+* Why is this necessary? Why not just require hourly time-series inputs
+* along with a time-series defining the desired time-slices?
 
 parameter hours(h) ;
 hours(h) = sum(d,hour_char(h,"p1",d,"hours") );
@@ -128,9 +139,11 @@ $ondelim
 $include inputs%ds%cap_start.csv
 $offdelim
 ;
+* Starting capacity or exogenous capacity?
 
 parameter m_cap_exog(i,v,r,t) ;
 m_cap_exog(i,v,r,t) = sum(tt$(tt.val <= t.val),cap_exog(i,v,r,tt,"capacity")) ;
+* Does this imply we are ignoring retirements?
 
 parameter cf_in(i,r,h)
 /
@@ -138,15 +151,20 @@ $ondelim
 $include inputs/cf.csv
 $offdelim
 /;
+* Again, I recommend consistency over minimalism. Hourly time-series inputs.
+* Always. Then those are grouped together by the time-slices defined by the
+* user. Users can then use whatever complicated clustering algorithms they
+* want to define their timeslices but that's outside the scope os SIMPLE.
 
 * -- Load -- 
 
 parameter load(r,h,t) "-- MW per timeslice -- exogenous load" 
           load_growth(r) "CAGR for load relative to 2020" /p1 0.05, p2 0.015/
 ;
-
+* Same thing here regarding inputs.
 
 load(r,h,t) = sum(d,hour_char(h,r,d,"load")) * (1+load_growth(r)) ** (t.val - 2020) ;
+* This "day" thing is new and confuses me. Is it needed?
 
 * enable val for existing capacities
 val(i,v,r,t)$[sum(tt$tpast(t,tt),cap_exog(i,v,r,tt,"capacity"))] = yes ;
@@ -203,6 +221,8 @@ parameter fuel_growth(f) "-- $ / mmBTU per year -- growth of fuel prices from 20
 gas 0.2
 col 0.3
 /;
+* What if a user doesn't want to define linear growth rates for fuel?
+* This is a dataset formulation thing, and it belongs outside the model.
 
 * assuming linear growth of fuel prices
 fuel_price_f(f,t)$[t.val > 2020] = fuel_price_f(f,"2020") + (t.val - 2020) * fuel_growth(f) ;
