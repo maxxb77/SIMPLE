@@ -59,6 +59,12 @@ set i "technology" /coal, gas-cc, wind/,
     val_inv(i,v,r,t) "valid investment combinations"
     commit(i,v,r,t)  "units that must face unit commitment"
 ;
+* If you are going to include binary variables, why not include a binary
+* decision variable for investments in addition to operation?
+* If I am looking at capacity expansion optimization for a small system, I
+* may be considering power plant X vs power plant Y, and my investment is
+* likely limited to discrete investments from a catologue of available
+* power plants.
 
 parameter min_up_time(i) "hours in a day a unit must remain running"
 /
